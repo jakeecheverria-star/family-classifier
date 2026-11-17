@@ -1,0 +1,49 @@
+# Default IFC4 entity for each Revit category.
+# The pipeline uses this as a starting point. Claude or an office rule can
+# override it, for example a "Generic Models" family that is really a bollard.
+# Categories that aren't listed fall back to IfcBuildingElementProxy.
+
+Walls: IfcWall
+Curtain Walls: IfcCurtainWall
+Curtain Panels: IfcPlate
+Curtain Wall Mullions: IfcMember
+Doors: IfcDoor
+Windows: IfcWindow
+Floors: IfcSlab
+Roofs: IfcRoof
+Ceilings: IfcCovering
+Columns: IfcColumn
+Structural Columns: IfcColumn
+Structural Framing: IfcBeam
+Structural Foundations: IfcFooting
+Stairs: IfcStair
+Ramps: IfcRamp
+Railings: IfcRailing
+Furniture: IfcFurniture
+Furniture Systems: IfcFurniture
+Casework: IfcFurniture
+Plumbing Fixtures: IfcSanitaryTerminal
+Pipes: IfcPipeSegment
+Pipe Fittings: IfcPipeFitting
+Pipe Accessories: IfcValve
+Ducts: IfcDuctSegment
+Duct Fittings: IfcDuctFitting
+Duct Accessories: IfcDamper
+Air Terminals: IfcAirTerminal
+Mechanical Equipment: IfcUnitaryEquipment
+Sprinklers: IfcFireSuppressionTerminal
+Cable Trays: IfcCableCarrierSegment
+Cable Tray Fittings: IfcCableCarrierFitting
+Conduits: IfcCableCarrierSegment
+Lighting Fixtures: IfcLightFixture
+Lighting Devices: IfcSwitchingDevice
+Electrical Fixtures: IfcOutlet
+Electrical Equipment: IfcElectricDistributionBoard
+Communication Devices: IfcCommunicationsAppliance
+Data Devices: IfcCommunicationsAppliance
+Fire Alarm Devices: IfcAlarm
+Security Devices: IfcSensor
+Generic Models: IfcBuildingElementProxy
+Specialty Equipment: IfcBuildingElementProxy
+Site: IfcSite
+Planting: IfcGeographicElement

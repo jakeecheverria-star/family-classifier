@@ -1,0 +1,49 @@
+# Office rules for family-classifier.
+#
+# abbreviations: expand the short forms in your family names, so the tool can
+#   find candidate Uniclass codes. Add your office's own.
+# rules: fixed mappings. Patterns are regular expressions matched against the
+#   whole value, ignoring case. The first matching rule wins.
+#   `family-classifier learn` adds rules with a `learned` date at the top.
+#
+# The codes below are placeholders. Replace them with real codes from your
+# Uniclass download before you use this file.
+
+uniclass_version: ""
+
+# Rows missing any of these parameters are flagged for review instead of
+# being sent to the model. "*" applies to every category.
+required_params:
+  Doors: [Width, Height]
+  Windows: [Width, Height]
+
+abbreviations:
+  DR: door
+  SGL: single
+  DBL: double
+  FL: flush
+  GLZ: glazed
+  WIN: window
+  CSMT: casement
+  SAN: sanitary
+  WC: toilet pan
+  WH: wall hung
+  WHB: washbasin
+  LT: luminaire
+  PNL: panel
+  GM: generic
+  ME: mechanical
+  FCU: fan coil unit
+  CEIL: ceiling
+  FN: furniture
+  ST: straight
+  EL: electrical
+  SKT: socket outlet
+
+rules:
+  - match:
+      category: Doors
+      family: DR_SGL_.*
+    uniclass_code: Pr_00_00_00_00
+    ifc_entity: IfcDoor
+    note: "Placeholder: all single doors. Replace the code."

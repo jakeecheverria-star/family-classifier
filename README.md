@@ -23,7 +23,7 @@ For the reasoning behind each stage, see [Design notes](docs/design.md).
 You need the following:
 
 - Python 3.10 or later.
-- An Anthropic API key, stored in the `ANTHROPIC_API_KEY` environment variable.
+- An Anthropic API key in `ANTHROPIC_API_KEY`, or an approved Azure OpenAI deployment. Neither is needed for rules-only runs.
 - The Uniclass Products (Pr) table, downloaded from NBS as a CSV or Excel file. This repo doesn't include the Uniclass tables. See [Uniclass data](docs/uniclass-data.md).
 - For the Revit side: Revit 2022 or later and pyRevit.
 
@@ -32,8 +32,10 @@ You need the following:
 To install the tool, run the following from the repo folder:
 
 ```
-pip install -e ".[dev]"
+pip install -e ".[anthropic,dev]"
 ```
+
+For Azure OpenAI instead, install `.[azure]`. For rules-only use, install the base package with no extras.
 
 To install the Revit buttons, add the `pyrevit` folder of this repo as a custom extension path in pyRevit settings, and then reload pyRevit. A **FamilyClassifier** tab appears with **Export Types** and **Write Back** buttons.
 
@@ -57,6 +59,17 @@ To learn from a reviewed file, run the following:
 ```
 family-classifier learn mapped.csv --rules examples/rules.yaml
 ```
+
+To build the export from ACC instead of Revit, download the fields and properties files of a Model Properties index or diff, and then run the following:
+
+```
+family-classifier from-acc fields.ldjson.gz properties.ldjson.gz \
+    --changes ADDED,CHANGED --params Width,Height --out export.csv
+```
+
+The adapter keeps one row per family type. Its default property names are a draft; check them against a real fields file.
+
+To run in an organization with approved services only, see [Deployment](docs/deployment.md).
 
 ## Output columns
 
