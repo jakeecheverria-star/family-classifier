@@ -11,6 +11,12 @@
 
 uniclass_version: ""
 
+# Rows missing any of these parameters are flagged for review instead of
+# being sent to the model. "*" applies to every category.
+required_params:
+  Doors: [Width, Height]
+  Windows: [Width, Height]
+
 abbreviations:
   DR: door
   SGL: single

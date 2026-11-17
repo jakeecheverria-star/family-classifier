@@ -24,15 +24,37 @@ def main(argv: list[str] | None = None) -> int:
     c.add_argument("--rules", default="rules.yaml", help="Office rules file.")
     c.add_argument("--out", default="mapped.csv", help="Output CSV.")
     c.add_argument("--offline", action="store_true", help="Use rules and the category map only.")
-    c.add_argument("--model", default=DEFAULT_MODEL)
+    c.add_argument("--provider", default="anthropic", help="anthropic or azure-openai.")
+    c.add_argument("--model", default=DEFAULT_MODEL, help="Model name, or Azure deployment name.")
     c.add_argument("--batch-size", type=int, default=20)
 
     l = sub.add_parser("learn", help="Turn reviewed rows into office rules.")
     l.add_argument("reviewed", help="Output CSV after review.")
     l.add_argument("--rules", default="rules.yaml")
 
+    a = sub.add_parser("from-acc", help="Convert ACC Model Properties results to an export CSV.")
+    a.add_argument("fields", help="Fields file (.ldjson or .ldjson.gz).")
+    a.add_argument("properties", help="Properties file (.ldjson or .ldjson.gz).")
+    a.add_argument("--out", default="export.csv")
+    a.add_argument("--changes", default="", help="For diff results, for example ADDED,CHANGED.")
+    a.add_argument("--params", default="", help="Comma-separated parameter names to keep.")
+
     args = parser.parse_args(argv)
-    return _classify(args) if args.command == "classify" else _learn(args)
+    handlers = {"classify": _classify, "learn": _learn, "from-acc": _from_acc}
+    return handlers[args.command](args)
+
+
+def _from_acc(args) -> int:
+    from .adapters.acc_model_properties import PropertyNames, load
+
+    names = PropertyNames()
+    if args.params:
+        names.params = [p.strip() for p in args.params.split(",") if p.strip()]
+    changes = {c.strip().upper() for c in args.changes.split(",") if c.strip()} or None
+    rows = load(args.fields, args.properties, names=names, change_types=changes)
+    write_output(rows, args.out)
+    print(f"Wrote {len(rows)} distinct family types to {args.out}.")
+    return 0
 
 
 def _classify(args) -> int:
@@ -52,9 +74,9 @@ def _classify(args) -> int:
         if table is None:
             print("Error: --uniclass is required unless you use --offline.", file=sys.stderr)
             return 2
-        from .llm import AnthropicCompleter
+        from .llm import make_completer
 
-        completer = AnthropicCompleter(model=args.model)
+        completer = make_completer(args.provider, args.model)
 
     def progress(done: int, total: int) -> None:
         print(f"  classified {done}/{total}", file=sys.stderr)

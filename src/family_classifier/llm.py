@@ -39,6 +39,45 @@ class AnthropicCompleter:
         return "".join(block.text for block in message.content if block.type == "text")
 
 
+class AzureOpenAICompleter:
+    """Azure OpenAI, for organizations that approve Microsoft-hosted models only.
+
+    Reads AZURE_OPENAI_ENDPOINT, AZURE_OPENAI_API_KEY, and AZURE_OPENAI_API_VERSION.
+    `model` is the name of your Azure deployment, not the base model name.
+    """
+
+    def __init__(self, model: str, max_tokens: int = 4096):
+        from openai import AzureOpenAI  # Optional dependency: pip install openai
+
+        self.client = AzureOpenAI(
+            azure_endpoint=os.environ["AZURE_OPENAI_ENDPOINT"],
+            api_key=os.environ["AZURE_OPENAI_API_KEY"],
+            api_version=os.environ.get("AZURE_OPENAI_API_VERSION", "2024-10-21"),
+        )
+        self.model = model
+        self.max_tokens = max_tokens
+
+    def __call__(self, prompt: str) -> str:
+        response = self.client.chat.completions.create(
+            model=self.model,
+            max_tokens=self.max_tokens,
+            messages=[{"role": "user", "content": prompt}],
+        )
+        return response.choices[0].message.content or ""
+
+
+PROVIDERS = {"anthropic": AnthropicCompleter, "azure-openai": AzureOpenAICompleter}
+
+
+def make_completer(provider: str, model: str) -> Completer:
+    """Create the completer for a provider name, such as 'anthropic' or 'azure-openai'."""
+    try:
+        cls = PROVIDERS[provider]
+    except KeyError:
+        raise ValueError(f"unknown provider {provider!r}; choose from {', '.join(PROVIDERS)}") from None
+    return cls(model=model)
+
+
 def build_prompt(
     rows: list[FamilyRow],
     candidates: list[list[UniclassItem]],

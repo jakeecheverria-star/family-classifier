@@ -48,8 +48,13 @@ def classify(
             row.ifc_entity = category_map.get(row.category, FALLBACK_IFC)
             row.confidence = "low"
             row.source = "category_map"
-            row.reason = "needs_review: no rule matched"
-            pending.append(row)
+            missing = rules.missing_params(row)
+            if missing:
+                # Don't let the model guess from partial data.
+                row.reason = "needs_review: missing " + ", ".join(missing)
+            else:
+                row.reason = "needs_review: no rule matched"
+                pending.append(row)
 
     if table is not None:
         for row in rows:

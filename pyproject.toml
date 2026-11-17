@@ -8,13 +8,14 @@ version = "0.1.0"
 description = "Map Revit family naming conventions to Uniclass and IFC with an LLM and learned office rules."
 requires-python = ">=3.10"
 dependencies = [
-    "anthropic>=0.40",
     "pyyaml>=6",
     "openpyxl>=3.1",
 ]
 
 [project.optional-dependencies]
 dev = ["pytest>=8"]
+anthropic = ["anthropic>=0.40"]
+azure = ["openai>=1.40"]
 
 [project.scripts]
 family-classifier = "family_classifier.cli:main"

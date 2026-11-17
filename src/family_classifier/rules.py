@@ -53,6 +53,13 @@ class OfficeRules:
     abbreviations: dict[str, str] = field(default_factory=dict)
     rules: list[Rule] = field(default_factory=list)
     uniclass_version: str = ""
+    # Parameters that must have a value before the model may classify a row,
+    # by Revit category. The key "*" applies to every category.
+    required_params: dict[str, list[str]] = field(default_factory=dict)
+
+    def missing_params(self, row: FamilyRow) -> list[str]:
+        needed = self.required_params.get("*", []) + self.required_params.get(row.category, [])
+        return [p for p in needed if not row.params.get(p, "").strip()]
 
     def find(self, row: FamilyRow) -> Rule | None:
         """Return the first matching rule. Rules earlier in the file win."""
@@ -85,11 +92,15 @@ class OfficeRules:
             abbreviations={str(k): str(v) for k, v in (data.get("abbreviations") or {}).items()},
             rules=rules,
             uniclass_version=str(data.get("uniclass_version", "")),
+            required_params={
+                str(k): [str(p) for p in (v or [])] for k, v in (data.get("required_params") or {}).items()
+            },
         )
 
     def save(self, path: str | Path) -> None:
         data = {
             "uniclass_version": self.uniclass_version,
+            "required_params": self.required_params,
             "abbreviations": self.abbreviations,
             "rules": [r.to_dict() for r in self.rules],
         }
