@@ -1,0 +1,17 @@
+__pycache__/
+*.pyc
+*.egg-info/
+.venv/
+.pytest_cache/
+.env
+
+# Never commit models or licensed tables
+*.rvt
+*.rfa
+*.rte
+data/*
+!data/README.md
+
+# Run outputs
+mapped*.csv
+*.xlsx
