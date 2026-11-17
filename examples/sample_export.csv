@@ -1,0 +1,11 @@
+element_id,category,family,type,Width,Height,Description,Type Mark
+1001,Doors,DR_SGL_FL,900x2100,900,2100,,D01
+1002,Doors,DR_DBL_GLZ,1800x2100,1800,2100,Double glazed door,D02
+1003,Windows,WIN_CSMT,1200x1500,1200,1500,,W01
+1004,Plumbing Fixtures,SAN_WC_WH,Standard,,,Wall hung WC,PF01
+1005,Plumbing Fixtures,SAN_WHB,Standard,,,,PF02
+1006,Lighting Fixtures,LT_LED_PNL,600x600,600,,Recessed LED panel,L01
+1007,Generic Models,GM_BOLLARD,Fixed,,,Steel bollard,GM01
+1008,Mechanical Equipment,ME_FCU_CEIL,Size 3,,,Ceiling fan coil unit,M01
+1009,Furniture,FN_DESK_ST,1600,1600,,,F01
+1010,Electrical Fixtures,EL_SKT_DBL,13A,,,Twin switched socket,E01
